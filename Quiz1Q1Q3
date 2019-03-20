@@ -9,16 +9,15 @@
 
 y= c(yt1,yt2,...,ytn)
 
-npvfunction1 <- function(y,n){
+npvfunction1 <- function(y,n=length(y)){
   out <- 0
-  for (j in 1:length(y){
-    out <- out +exp(-y[j]*n)
+  for (n in 1:n{
+    out <- out +exp(-y[n]*n)
   })
   return(out)
 }
 
 NPV = C * npvfunction1(y,n) + F *exp(-ytn*n)
-
 
 
 ####### 3 #########
