@@ -1,0 +1,134 @@
+####### Take home quiz 1 ##########
+###### Xiao Heidi Han 40991962 #########
+
+####### 1 ########
+### Price of a bond that pays coupon C every 6 months until maturity and and the face value F at maturity
+#### Write a program in R to calculate the price of the bond, given its coupon C, face value F, 
+### the number of coupon payments n, and the interest rate y(0.5),y(1),...,y(n). 
+### (Assume that the time to the ﬁrst coupon payment is 6 months.) 
+
+y= c(yt1,yt2,...,ytn)
+
+npvfunction1 <- function(y,n){
+  out <- 0
+  for (j in 1:length(y){
+    out <- out +exp(-y[j]*n)
+  })
+  return(out)
+}
+
+NPV = C * npvfunction1(y,n) + F *exp(-ytn*n)
+
+
+
+####### 3 #########
+#### (a) Read the dataset into R and name it dataset #######
+
+setwd("C:/Users/heidi/Dropbox/Personal/MQ Uni ACST890/ACST890/Take home quiz 1")
+singapore_economy <- read.csv("singapore.economy.csv")
+View(singapore_economy)
+head(singapore_economy)
+dim(singapore_economy)
+ 
+#### (b) Some data ﬁelds contain NA. Please exclude all records that contain NA ####
+singapore_economy=na.omit(singapore_economy)
+summary(singapore_economy)
+head(singapore_economy)
+dim(singapore_economy)
+
+#### (c)  Plot Singapore GDP against time. Label horizontal axis as ’Time’; label vertical axis as ’GDP (%)’. ####
+#### Put a title ’Singapore GDP growth’ on above the plot.####
+
+plot(singapore_economy$time,singapore_economy$gdp,main="Singapore GDP growth",xlab="time",ylab = "Singapore GDP")
+
+#### (d)  Calculate the mean and standard deviation of Singapore GDP for each of the three periods deﬁned by variable period.####
+#### Then use the calculated statistics for each period to create a data table named ’stat.table’. ####
+library(data.table)
+gdp1<- subset(singapore_economy$gdp,period=='1')
+head(gdp1)
+gdp2<- subset(singapore_economy$gdp,period=='2')
+head(gdp2)
+gdp3<- subset(singapore_economy$gdp,period=='3')
+head(gdp3)
+
+mean_gdp1=mean(gdp1)
+mean_gdp2=mean(gdp2)
+mean_gdp3=mean(gdp3)
+mean_gdp=c(mean_gdp1,mean_gdp2,mean_gdp3)
+mean_gdp
+
+sd_gdp1=sd(gdp1)
+sd_gdp2=sd(gdp2)
+sd_gdp3=sd(gdp3)
+sd_gdp=c(sd_gdp1,sd_gdp2,sd_gdp3)
+sd_gdp
+
+stat.table=data.frame(mean_gdp,sd_gdp)
+stat.table
+
+#### (e) Using function pairs(), provide a scatterplot for every pair of variables in the dataset, except for time and period. ###
+pairs(~gdp+exp+epg+crd+hpr+gdpus+oil+bci,data = singapore_economy)
+
+#### (f)  Use the lm() function to perform a simple linear regression with gdp as the response and exp as the predictor. ###
+#### Use the summary() function to print the results. Comment on the output. ####
+lm.fit = lm(gdp~exp,data = singapore_economy)
+summary(lm.fit)
+
+### Comments: ###
+### there is a relationship between exp and gdp as deterined by testing the null hypothesis of all regression coefficients equal to zero. 
+### Since the F-statistic is larger and the p-value of the F-statistic is close to zero we can reject the null hypothesis 
+### and state there is a statistically significant relationship between exp and gdp.
+### To calculate the residual error relative to the response we use the mean of the response and the RSE. 
+### The R2 of the lm.fit was about 0.2879, meaning 28.79% of the variance in gdp is explained by exp.
+### The relationship between exp and gdp is positive. 
+### The higher the Export Growth rate is, the linear regression indicatesthe higher GDP growth rate will be.
+
+##### (g) Fit a multiple regression model to predict gdp using the following variables: exp, epg, hpr, oil, gdpus, crd. ###
+#### Use the summary() function to print the results. Comment on the output. ###
+lm.fit=lm(gdp~exp+epg+hpr+oil+gdpus+crd, data = singapore_economy)
+summary(lm.fit)
+
+### Comments: ###
+### There is a relatioship between the predictors and the response by testing the null hypothesis of whether all the regression coefficients are zero. 
+### The F -statistic is relatively away from 1 (with a small p-value), indicating evidence against the null hypothesis.
+### Looking at the p-values associated with each predictor’s t-statistic, we see that exp and epg have a statistically significant relationship, 
+### while hpr, oil, gdpus and crd do not.
+### The regression coefficient for exp and epg are both positive, suggests that an increases in Export growth rate and/or Real price of main equity
+### will contribute to an increase in GDP growth rate.
+
+
+#### (h) Calculate the 5% quantile of gdp using function quantile(). 
+gdp_5_quantile= quantile(singapore_economy$gdp,c(0.05))
+gdp_5_quantile
+
+### The economy is said to be in a crisis state if gdp is lower than its 0.05 quantile, and in a normal state otherwise. 
+### Based on gdp, create a factor vector for the economy state and name it state. 
+### Then put this vector in the dataset using the data.frame() function. 
+crisis_state <- rep("1",nrow(singapore_economy))
+crisis_state [singapore_economy$gdp > -2.518439]= "0"
+crisis_state=as.factor(crisis_state)
+singapore_economy_state =data.frame(singapore_economy,crisis_state)
+head(singapore_economy_state)
+View(singapore_economy_state)
+summary(crisis_state)
+### crisis state = 1, normal state = 0 ###
+
+### For the state, ﬁt the logistic regression model using up to year 2007 as training data period, with bci as the only predictor. 
+### Compute the confusion matrix.
+train = (period < 3)
+singapore_economy_state_2008_2017 = singapore_economy_state[!train, ]
+dim(singapore_economy_state_2008_2017)
+
+glm.fit = glm(crisis_state~bci,data=singapore_economy_state,family = binomial,subset= train)
+summary(glm.fit)
+glm.probs = predict(glm.fit, singapore_economy_state_2008_2017, type = "response")
+glm.probs[1:10]
+
+crisis_state.2008_2017 = crisis_state[!train]
+
+glm.pred = rep("0", length(glm.probs))
+glm.pred[glm.probs > 0.5] = "1"
+
+table(glm.pred, crisis_state.2008_2017)
+
+### END
