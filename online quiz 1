@@ -1,0 +1,146 @@
+#Q1 a.
+curl https://www.staff.hs-mittweida.de/~wuenschi/data/media/compbiolbook/chapter-10-shell-programming--triplet-stop.sh
+
+#Q1 b.
+nano
+
+##Step1: Copy above code and edit at nano:
+
+#!/bin/bash
+# save as triplet-stop-1.sh
+# splits a sequence into triplets
+x=9
+while [ -n "${1:$x:3}" ]; do
+  seq=$seq${1:$x:3}" "
+  x=$(expr $x + 3)
+  if [ ${1:$x:3} == taa ] ; then
+    break
+  fi
+done
+echo "$seq"
+
+##Step 2: exit nano and save script as program “triplet-stop-1.sh”
+
+##Step 3: make above program executable
+chmod u+x triplet-stop-1.sh
+
+##Step 4:  test the program
+./triplet-stop-1.sh taahsggdhstxtaashd
+#Result:  stx
+
+./triplet-stop-1.sh dhgtaajvhdhfgsytaajhd
+
+#Result: dhf gsy
+
+
+./triplet-stop-1.sh dgftaajdhftdjshcndhsa
+
+#Result: ftd jsh cnd hsa
+
+#Q2 b.
+
+cat tutes.txt | grep -oE '\w+' | sort | uniq -c | sort -nr 
+
+#Q3 a. 
+egrep '   ' filename
+
+#Example: 
+egrep '   ' structure.pdb
+
+#Result:
+
+HEADER  Hydrogenase                     23-Mar-99   1CFZ
+HELIX  1 hel ILE A   18  GLN A   28
+HELIX  2 hel PRO A   92  THR A  107
+SHEET  1 str ARG A    2  ASN A  10
+SHEET  2 str ARG A   29  LEU A  32
+SHEET  3 str TYR A   35  THR A  43
+ATOM 1  C   MET A 1 48.865  25.394  51.393  1.00 54.58 C
+ATOM 6  N   MET A 1 50.347  23.578  52.116  1.00 62.03 N
+ATOM 7  O   MET A 1 47.875  25.011  52.020  1.00 54.99 O
+
+#Q3 b.
+egrep '(^-[0-9]+$)' filename
+
+#Example: test11.3
+-102
+-24
+345
+23
+-2.05
+1-4
+-3.0
+
+egrep '(^-[0-9]+$)' test11.3
+
+#Result:
+-102
+-24
+
+#Q3 c.
+egrep '(^[ ]+)([-|+]{0,1}[0-9]+)(\.)([0-9]+)([ ]+$)' filename
+
+#Example:test11.4
+  +235.4895
+  -4577.387
+5749.364
+  235.78
+ -67
+  -78.578
+ -4824
+ -0.8468
+ 897.000
+
+
+egrep '(^[ ]+)([-|+]{0,1}[0-9]+)(\.)([0-9]+)([ ]+$)' test11.4
+
+Result:
+  +235.4895  
+  -4577.387  
+  235.78  
+ -0.8468  
+ 897.000 
+
+#Q3 d.
+egrep -v '.*\<[D|d]ehydrogenase\>[ ]*.*' filename |egrep '.*\<[H|h]ydrogenase\>[ ]+.*'
+
+Example:
+structure1.pdb
+
+HEADER  Hydrogenase                     23-Mar-99   1CFZ
+COMPND  Hydrogenase Maturating Endopeptidase Hybd From
+SOURCE  ORGANISM_SCIENTIFIC: Escherichia coli
+AUTHOR  Fritsche, Paschos, Beisel, Boeck & Huber
+REMARK NCBI PDB FORMAT VERSION 5.0
+SEQRES 1 A  162  MET ARG ILE LEU VAL LEU GLY VAL GLY ASN
+SEQRES 2 A  162  THR ASP GLU ALA ILE GLY VAL ARG ILE VAL
+SEQRES 3 A  162  GLU GLN ARG TYR ILE LEU PRO ASP TYR VAL
+SEQRES 4 A  162  ASP GLY GLY THR ALA GLY MET GLU LEU LEU
+HELIX  1 hel ILE A   18  GLN A   28
+HELIX  2 hel PRO A   92  THR A  107
+HELIX  3 hel ILE A  138  SER A  152
+SHEET  1 str ARG A    2  ASN A  10
+SHEET  2 str ARG A   29  LEU A  32
+SHEET  3 str TYR A   35  THR A  43
+ATOM 1  C   MET A 1 48.865  25.394  51.393  1.00 54.58 C
+ATOM 2  CA  MET A 1 49.879  24.359  50.932  1.00 59.61 C
+ATOM 3  CB  MET A 1 49.248  23.457  49.877  1.00 62.37 C
+ATOM 4  CE  MET A 1 51.349  24.403  47.765  1.00 71.39 C
+ATOM 5  CG  MET A 1 48.708  24.106  48.629  1.00 66.70 C
+ATOM 6  N   MET A 1 50.347  23.578  52.116  1.00 62.03 N
+ATOM 7  O   MET A 1 47.875  25.011  52.020  1.00 54.99 O
+ATOM 8  SD  MET A 1 49.731  23.948  47.163  1.00 77.15 S
+COMPND  Hydrogenase Maturating Endopeptidase Hybd From Dehydrogenase
+COMPND  Dehydrogenase Maturating Endopeptidase Hybd
+COMPND  Dehydrogenase Maturating Endopeptidase Hybd From Hydrogenase
+
+
+egrep -v '.*\<[D|d]ehydrogenase\>[ ]*.*' structure1.pdb |egrep '.*\<[H|h]ydrogenase\>[ ]+.*'
+
+Result:
+HEADER  Hydrogenase                     23-Mar-99   1CFZ
+COMPND  Hydrogenase Maturating Endopeptidase Hybd From
+
+
+
+
