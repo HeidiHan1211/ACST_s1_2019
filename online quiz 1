@@ -9,15 +9,20 @@ nano
 #!/bin/bash
 # save as triplet-stop-1.sh
 # splits a sequence into triplets
-x=9
+
+x=0
 while [ -n "${1:$x:3}" ]; do
-  seq=$seq${1:$x:3}" "
-  x=$(expr $x + 3)
-  if [ ${1:$x:3} == taa ] ; then
+  group=${1:$x:3}
+  seq=$seq$group" "
+  x=$((x+3))
+
+  if (( x >= 9 )) && [ $group == "taa" ]; then
     break
   fi
 done
+
 echo "$seq"
+
 
 ##Step 2: exit nano and save script as program “triplet-stop-1.sh”
 
@@ -25,17 +30,14 @@ echo "$seq"
 chmod u+x triplet-stop-1.sh
 
 ##Step 4:  test the program
-./triplet-stop-1.sh taahsggdhstxtaashd
-#Result:  stx
+ ./triplet-stop-1.sh taazhstaashjdkfhs
+# Result: taa zhs taa
 
-./triplet-stop-1.sh dhgtaajvhdhfgsytaajhd
+./triplet-stop-1.sh dhgatdjfstaajsgfkd
+# Result: dhg atd jfs taa
 
-#Result: dhf gsy
-
-
-./triplet-stop-1.sh dgftaajdhftdjshcndhsa
-
-#Result: ftd jsh cnd hsa
+ ./triplet-stop-1.sh dgftaajdhftdjshcndhsa
+# Result: dgf taa jdh ftd jsh cnd hsa
 
 #Q2 b.
 
@@ -94,7 +96,7 @@ egrep '(^[ ]+)([-|+]{0,1}[0-9]+)(\.)([0-9]+)([ ]+$)' filename
 
 egrep '(^[ ]+)([-|+]{0,1}[0-9]+)(\.)([0-9]+)([ ]+$)' test11.4
 
-Result:
+# Result:
   +235.4895  
   -4577.387  
   235.78  
@@ -104,8 +106,7 @@ Result:
 #Q3 d.
 egrep -v '.*\<[D|d]ehydrogenase\>[ ]*.*' filename |egrep '.*\<[H|h]ydrogenase\>[ ]+.*'
 
-Example:
-structure1.pdb
+#Example: structure1.pdb
 
 HEADER  Hydrogenase                     23-Mar-99   1CFZ
 COMPND  Hydrogenase Maturating Endopeptidase Hybd From
@@ -137,7 +138,7 @@ COMPND  Dehydrogenase Maturating Endopeptidase Hybd From Hydrogenase
 
 egrep -v '.*\<[D|d]ehydrogenase\>[ ]*.*' structure1.pdb |egrep '.*\<[H|h]ydrogenase\>[ ]+.*'
 
-Result:
+#Result:
 HEADER  Hydrogenase                     23-Mar-99   1CFZ
 COMPND  Hydrogenase Maturating Endopeptidase Hybd From
 
