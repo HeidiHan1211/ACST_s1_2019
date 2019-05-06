@@ -1,3 +1,96 @@
 #Q1
+# Take a look at word "Huck"
+grep "Huck"* twain.txt
+vi twain.txt
+# In vi editor, type below commend
+:%s/Huck/HucK/g
+# Check if replaced all "Huck" with "HucK"
+grep "HucK"* twain.txt 
 
+#Q3
+#[leapyear.py]
+year = int(input("Enter an integer: "))
+
+if (year % 4) == 0:
+   if (year % 100) == 0:
+       if (year % 400) == 0:
+           print("{0} is a leap year".format(year))
+       else:
+           print("{0} is not a leap year".format(year))
+   else:
+       print("{0} is a leap year".format(year))
+else:
+   print("{0} is not a leap year".format(year))
+
+python3 leapyear.py
+
+#Q4
+nano randomab.py
+
+#[randomab.py]
+import sys
+import random
+a=int(sys.argv[1])#enter a
+b=int(sys.argv[2])#enter b
+r= random.randint(a,b)
+print (r)
+
+python3 randomab.py 100 200
+
+#Q5
+
+#[datetimecheck.py]
+
+import datetime
+import sys
+
+m=int(sys.argv[1])
+d=int(sys.argv[2])
+
+input_datetime=datetime.datetime(2019,m,d)
+input_day_of_year=(input_datetime-datetime.datetime(2019, 1, 1)).days +1
+
+small_datetime=datetime.datetime(2019,3,20)
+small_day_of_year=(small_datetime-datetime.datetime(2019, 1, 1)).days +1
+
+large_datetime=datetime.datetime(2019,6,20)
+large_day_of_year=(large_datetime-datetime.datetime(2019, 1, 1)).days +1
+
+if small_day_of_year < input_day_of_year < large_day_of_year:
+    print ('True')
+else:
+    print ('False')
+
+ubuntu@ip-172-31-21-146:~$ python3 datetimecheck.py 5 20
+True
+ubuntu@ip-172-31-21-146:~$ python3 datetimecheck.py 7 20
+False
+ubuntu@ip-172-31-21-146:~$ python3 datetimecheck.py 3 20
+False
+ubuntu@ip-172-31-21-146:~$ python3 datetimecheck.py 6 20
+False
+
+
+
+#Q6 
+nano Pert.py
+
+#[Pert.py]
+import math
+import sys
+P=float(sys.argv[1])#P is principal
+r=float(sys.argv[2])# r is annual interest rate
+t=int(sys.argv[3]) #t is the number of years
+
+def desiredvalue(P,r,t):
+    i=math.e**(r*t)
+    return P*i
+    
+a=desiredvalue(P,t,r)
+
+print('The amount of money you will have if invested %.2f \
+at interest rate %.2f for %d year is %.2f'%(P,r,t,a))
+
+python3 Pert.py 100 0.065 5
+#The amount of money you will have if invested 100.00 at interest rate 0.06500 r 5 year is 138.40
 
